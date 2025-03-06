@@ -38,7 +38,7 @@ class Beer
                 ':origin' => $origin,
                 ':alcohol' => floatval($alcohol),
                 ':description' => $description,
-                ':image' => !empty($image) ? $image : null
+                ':image' => !empty($image) ?  $image : null
             ]);
 
             if ($result) {

@@ -14,4 +14,4 @@ define('DB_PASS', 'root');
 
 // Définir un chemin de base pour les URLs et les fichiers
 define('BASE_URL', '/beercraft/');
-define('UPLOADS_DIR', __DIR__ . '/../uploads/');
+define('UPLOADS_DIR', 'uploads/');

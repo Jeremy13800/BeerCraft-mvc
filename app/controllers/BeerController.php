@@ -20,6 +20,7 @@ class BeerController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $formData = $this->sanitizeInput($_POST);
+            $formData['image'] = UPLOADS_DIR . $formData['image'];
             $errors = $this->validateBeerData($formData);
 
             if (empty($errors)) {
@@ -72,10 +73,11 @@ class BeerController
         if (strlen($data['description']) < 10) {
             $errors[] = "La description doit contenir au moins 10 caractères.";
         }
-        if (!empty($data['image']) && !filter_var($data['image'], FILTER_VALIDATE_URL)) {
-            $errors[] = "L'URL de l'image n'est pas valide.";
+        if (empty($data['image'])) {
+            $errors[] = "L'URL de l'image n'est pas valide. {$data['image']}";
         }
 
+        //FILTER_VALIDATE_URL
         return $errors;
     }
 }

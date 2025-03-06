@@ -59,6 +59,7 @@ INSERT INTO Beer (name, origin, alcohol, description, image, average_price, crea
 ('Stout Noire', 'Irlande', 8.0, 'Un stout noir intense avec des arômes de café.', NULL, 5.00, NOW()),
 ('Lager Légère', 'Allemagne', 4.5, 'Une lager douce et rafraîchissante.', NULL, 3.50, NOW());
 
+
 INSERT INTO beer (name, origin,alcohol, description, image, average_price, created_at) VALUES
 ('Porter', 'États-Unis', 5.0, 'Un porter légère et agréable.', NULL, 4.00, NOW()),
 ('Pale Ale', 'États-Unis', 4.5, 'Une bière pale et agréable.', NULL, 3.75, NOW()),
@@ -78,10 +79,32 @@ WHERE name = 'La Chouffe';
 
 INSERT INTO beer_category (beer_id, category_id) VALUES
 (1, 1),
-INSERT INTO Category (name, created_at) VALUES
+(2, 2),
+(4, 4),
+(5, 5),
+(8, 6),
+(9, 11),
+(10, 7);
+
+INSERT INTO category (name, created_at) VALUES
 ('IPA', NOW()),
 ('Stout', NOW()),
- ('Lager', NOW());
+('Lager', NOW()),
+('IPA (India Pale Ale)', NOW()),
+('Stout', NOW()),
+('Lager', NOW()),
+('Porter', NOW()),
+('Pale Ale', NOW()),
+('Belgian Ale', NOW()),
+('Wheat Beer', NOW()),
+('Pilsner', NOW()),
+('Amber Ale', NOW()),
+('Sour Beer', NOW()),
+('Saison', NOW()),
+('Barleywine', NOW());
+
+UPDATE Beer
+
 
 UPDATE beer
 SET description = 'Une bière noire emblématique aux arômes de café et de caramel'
@@ -102,7 +125,10 @@ RENAME TABLE Beer_Category TO beer_category;
 
 INSERT INTO comment (content, rating, user_id, beer_id, created_at) VALUES
 ('Une bière parfaite pour les amateurs de saveurs complexes.', 5, 1, 1, NOW()),
+
 ('J’adore cette Porter, très douce et agréable !', 4, 2, 2, NOW());
+('J’adore cette Porter, très douce et agréable !', 4, 2, 2, NOW());
+
 
 
 

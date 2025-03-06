@@ -1,4 +1,5 @@
 <!-- views/add_beer.php -->
+
 <div class="min-h-screen bg-gradient-to-br from-amber-100 via-yellow-50 to-orange-50 py-12 relative overflow-hidden">
     <!-- Éléments décoratifs d'arrière-plan -->
     <div class="absolute inset-0 overflow-hidden opacity-10">
@@ -132,6 +133,7 @@
                             img.src = e.target.result;
                             preview.classList.remove('hidden');
                             fileName.textContent = input.files[0].name;
+
                         }
 
                         reader.readAsDataURL(input.files[0]);

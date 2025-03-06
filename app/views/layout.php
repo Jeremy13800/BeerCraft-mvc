@@ -5,6 +5,8 @@
 <body>
     <?php include 'app/views/inc/header.php'; ?>
 
+
+
     <main>
         <?php
         if (isset($view) && file_exists("app/views/{$view}.php")) {

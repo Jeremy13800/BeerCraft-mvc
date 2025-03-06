@@ -15,6 +15,8 @@
     </div>
 
     <div class="container mx-auto px-4 relative z-10">
+        <!-- Suppression du filtre par catégorie -->
+
         <!-- Message de succès -->
         <?php if (isset($_SESSION['success_message'])): ?>
             <div class="mb-8 bg-green-50 border-l-4 border-green-400 p-4 rounded-r shadow-sm transform transition-all duration-500">
@@ -44,45 +46,44 @@
         <!-- Grille des bières -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <?php foreach ($beers as $beer): ?>
-                <div class="h-full transform hover:scale-[1.0] transition-all duration-300">
-                    <div class="bg-white/80 backdrop-blur-md rounded-xl overflow-hidden shadow-xl border border-amber-100 h-full flex flex-col hover:shadow-2xl transition-shadow">
+                <div class="h-full transform hover:scale-[1.02] transition-all duration-300">
+                    <div class="bg-white/90 backdrop-blur-md rounded-xl overflow-hidden shadow-xl h-full flex flex-col hover:shadow-2xl transition-shadow border border-amber-100">
                         <?php if (!empty($beer['image'])): ?>
-                            <img src="<?= 'uploads/chouffe.jpg' ?>"
-                                alt="<?= htmlspecialchars($beer['name']); ?>"
-                                class="w-full h-48 object-cover object-center">
+                            <div class="relative h-64 overflow-hidden">
+                                <img src="<?= $beer['image'] ?>"
+                                    alt="<?= htmlspecialchars($beer['name']); ?>"
+                                    class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-500">
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent h-20"></div>
+                            </div>
                         <?php else: ?>
-                            <div class="w-full h-48 bg-amber-100 flex items-center justify-center text-6xl">
-                                🍺
+                            <div class="relative h-64 bg-gradient-to-br from-amber-100 to-amber-50 flex items-center justify-center">
+                                <span class="text-8xl opacity-80">🍺</span>
+                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/30 to-transparent h-20"></div>
                             </div>
                         <?php endif; ?>
 
-
                         <div class="p-6 flex flex-col flex-grow">
-                            <h2 class="text-2xl font-bold text-amber-900 mb-2">
+                            <h2 class="text-2xl font-bold text-amber-900 mb-3">
                                 <?= htmlspecialchars($beer['name']); ?>
                             </h2>
 
-                            <div class="space-y-2 mb-4">
+                            <div class="space-y-3 mb-4">
                                 <p class="flex items-center text-amber-800">
-                                    <span class="mr-2">🌍</span>
+                                    <span class="mr-2 opacity-80">🌍</span>
                                     <span class="font-medium"><?= htmlspecialchars($beer['origin']); ?></span>
                                 </p>
                                 <p class="flex items-center text-amber-800">
-                                    <span class="mr-2">🌡️</span>
+                                    <span class="mr-2 opacity-80">🌡️</span>
                                     <span class="font-medium"><?= htmlspecialchars($beer['alcohol']); ?>%</span>
                                 </p>
                             </div>
 
-                            <p class="text-amber-700 mb-4 line-clamp-2 flex-grow">
+                            <p class="text-amber-700 mb-6 line-clamp-3 flex-grow">
                                 <?= htmlspecialchars($beer['description'] ?? 'Aucune description disponible'); ?>
                             </p>
 
                             <a href="index.php?action=beer_detail&id=<?= $beer['id']; ?>"
-                                class="inline-flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r 
-                                      from-amber-500 to-yellow-500 text-white rounded-lg
-                                      hover:from-amber-600 hover:to-yellow-600 
-                                      transition-all duration-300 shadow-md hover:shadow-lg
-                                      font-medium mt-auto">
+                                class="inline-flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg hover:from-amber-600 hover:to-amber-700 transition-all duration-300 shadow-md hover:shadow-lg font-medium">
                                 <span>Découvrir cette bière</span>
                                 <span class="ml-2">→</span>
                             </a>
@@ -97,8 +98,7 @@
             <div class="text-center py-12">
                 <p class="text-2xl text-amber-800 mb-4">Aucune bière n'a encore été ajoutée.</p>
                 <a href="index.php?action=add_beer"
-                    class="inline-flex items-center px-6 py-3 bg-amber-500 text-white rounded-lg
-                          hover:bg-amber-600 transition-all duration-300">
+                    class="inline-flex items-center px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-all duration-300">
                     <span class="mr-2">Ajouter la première bière</span>
                     <span>🍺</span>
                 </a>
