@@ -22,6 +22,19 @@ class Beer
         }
     }
 
+    public function getBeerById($id)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM beer WHERE id = :id");
+            $stmt->execute([':id' => $id]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Erreur dans getBeerById: " . $e->getMessage());
+            return false;
+        }
+    }
+
+
     public function addBeer($name, $origin, $alcohol, $description, $image)
     {
         try {

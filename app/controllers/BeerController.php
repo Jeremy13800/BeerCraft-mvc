@@ -46,6 +46,43 @@ class BeerController
         include_once("app/views/layout.php");
     }
 
+    public function detail($id)
+    {
+        require_once 'app/models/Comment.php';
+
+        $beerModel = new Beer();
+        $commentModel = new Comment();
+
+        $beer = $beerModel->getBeerById($id);
+        $comments = $commentModel->getCommentsForBeer($id);
+
+        $view = "beer_detail";
+        include_once("app/views/layout.php");
+    }
+
+    public function addComment()
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $beerId = filter_input(INPUT_POST, 'beer_id', FILTER_VALIDATE_INT);
+            $content = trim($_POST['content'] ?? '');
+            $rating = filter_input(INPUT_POST, 'rating', FILTER_VALIDATE_INT);
+
+            if ($beerId && $content && $rating >= 1 && $rating <= 5) {
+                $commentModel = new Comment();
+                if ($commentModel->addComment($content, $rating, $_SESSION['user']['id'], $beerId)) {
+                    $_SESSION['success_message'] = "Votre commentaire a été ajouté avec succès !";
+                }
+            }
+            header("Location: index.php?action=beer_detail&id=$beerId");
+            exit;
+        }
+    }
+
     private function sanitizeInput($data)
     {
         return [

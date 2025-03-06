@@ -3,127 +3,239 @@
 // var_dump(ROOT_DIR);
 ?>
 
-<div class="min-h-screen bg-gradient-to-br from-amber-100 via-yellow-50 to-orange-50 py-12 relative">
-    <!-- Éléments décoratifs d'arrière-plan -->
-    <div class="absolute inset-0 overflow-hidden opacity-10">
-        <?php for ($i = 0; $i < 15; $i++): ?>
-            <div class="absolute animate-float-slow"
-                style="left: <?= rand(0, 100) ?>%; top: <?= rand(-20, 100) ?>%; animation-delay: <?= rand(0, 3000) ?>ms">
-                <?= ['🍺', '🌾', '🍻'][rand(0, 2)] ?>
+<div class="minecraft-background min-h-screen py-12 relative">
+    <!-- Particules flottantes style Minecraft -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <?php
+        $pixels = ['⬜', '🟫', '🟨'];
+        for ($i = 0; $i < 150; $i++): ?>
+            <div class="absolute pixel-float"
+                style="left: <?= rand(0, 100) ?>%; 
+                       top: <?= rand(-20, 120) ?>%; 
+                       animation-delay: <?= rand(0, 3000) ?>ms;
+                       opacity: <?= rand(2, 5) / 10 ?>;">
+                <?= $pixels[array_rand($pixels)] ?>
             </div>
         <?php endfor; ?>
     </div>
 
     <div class="container mx-auto px-4 relative z-10">
-        <!-- Suppression du filtre par catégorie -->
-
-        <!-- Message de succès -->
-        <?php if (isset($_SESSION['success_message'])): ?>
-            <div class="mb-8 bg-green-50 border-l-4 border-green-400 p-4 rounded-r shadow-sm transform transition-all duration-500">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-green-700"><?= $_SESSION['success_message'] ?></p>
-                    </div>
-                </div>
-            </div>
-            <?php unset($_SESSION['success_message']); ?>
-        <?php endif; ?>
-
-        <!-- En-tête de la page -->
+        <!-- En-tête Minecraft -->
         <div class="text-center mb-12">
-            <h1 class="text-4xl font-bold text-amber-900 mb-4 relative inline-block">
-                <span class="relative z-10">Notre Collection de Bières</span>
-                <div class="absolute inset-x-0 bottom-0 h-3 bg-yellow-300 transform -skew-x-12"></div>
+            <h1 class="minecraft-title text-5xl text-yellow-300 mb-4">
+                Collection de Bières
             </h1>
-            <p class="text-amber-800 text-xl">Découvrez notre sélection de bières artisanales</p>
+            <p class="minecraft-text text-xl text-yellow-200">
+                Choisissez votre breuvage, aventurier !
+            </p>
         </div>
 
         <!-- Grille des bières -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <?php foreach ($beers as $beer): ?>
-                <div class="h-full transform hover:scale-[1.02] transition-all duration-300">
-                    <div class="bg-white/90 backdrop-blur-md rounded-xl overflow-hidden shadow-xl h-full flex flex-col hover:shadow-2xl transition-shadow border border-amber-100">
-                        <?php if (!empty($beer['image'])): ?>
-                            <div class="relative h-64 overflow-hidden">
+                <div class="minecraft-card group">
+                    <!-- Carte avec bordure style Minecraft -->
+                    <div class="pixel-border bg-[#2b1508] relative">
+                        <!-- Image avec style Minecraft -->
+                        <div class="relative aspect-square minecraft-image-container">
+                            <?php if (!empty($beer['image'])): ?>
                                 <img src="<?= $beer['image'] ?>"
-                                    alt="<?= htmlspecialchars($beer['name']); ?>"
-                                    class="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-500">
-                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent h-20"></div>
-                            </div>
-                        <?php else: ?>
-                            <div class="relative h-64 bg-gradient-to-br from-amber-100 to-amber-50 flex items-center justify-center">
-                                <span class="text-8xl opacity-80">🍺</span>
-                                <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/30 to-transparent h-20"></div>
-                            </div>
-                        <?php endif; ?>
+                                    alt="<?= htmlspecialchars($beer['name']) ?>"
+                                    class="w-full h-full object-cover minecraft-pixelate">
+                            <?php else: ?>
+                                <div class="w-full h-full bg-[#8B4513] minecraft-pattern flex items-center justify-center">
+                                    <div class="minecraft-item-frame">
+                                        <span class="text-8xl transform group-hover:scale-110 transition-transform">🍺</span>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                            <!-- Overlay style Minecraft -->
+                            <div class="minecraft-overlay"></div>
+                        </div>
 
-                        <div class="p-6 flex flex-col flex-grow">
-                            <h2 class="text-2xl font-bold text-amber-900 mb-3">
-                                <?= htmlspecialchars($beer['name']); ?>
+                        <!-- Contenu -->
+                        <div class="p-6 space-y-4">
+                            <h2 class="minecraft-title text-2xl text-yellow-300 leading-tight">
+                                <?= htmlspecialchars($beer['name']) ?>
                             </h2>
 
-                            <div class="space-y-3 mb-4">
-                                <p class="flex items-center text-amber-800">
-                                    <span class="mr-2 opacity-80">🌍</span>
-                                    <span class="font-medium"><?= htmlspecialchars($beer['origin']); ?></span>
-                                </p>
-                                <p class="flex items-center text-amber-800">
-                                    <span class="mr-2 opacity-80">🌡️</span>
-                                    <span class="font-medium"><?= htmlspecialchars($beer['alcohol']); ?>%</span>
-                                </p>
+                            <!-- Stats avec style Minecraft UI -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="minecraft-stat-box">
+                                    <span class="minecraft-icon">🌍</span>
+                                    <?= htmlspecialchars($beer['origin']) ?>
+                                </div>
+                                <div class="minecraft-stat-box">
+                                    <span class="minecraft-icon">⚔️</span>
+                                    <?= htmlspecialchars($beer['alcohol']) ?>%
+                                </div>
                             </div>
 
-                            <p class="text-amber-700 mb-6 line-clamp-3 flex-grow">
-                                <?= htmlspecialchars($beer['description'] ?? 'Aucune description disponible'); ?>
+                            <p class="minecraft-text text-gray-300 line-clamp-3">
+                                <?= htmlspecialchars($beer['description']) ?>
                             </p>
 
-                            <a href="index.php?action=beer_detail&id=<?= $beer['id']; ?>"
-                                class="inline-flex items-center justify-center w-full px-4 py-3 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg hover:from-amber-600 hover:to-amber-700 transition-all duration-300 shadow-md hover:shadow-lg font-medium">
-                                <span>Découvrir cette bière</span>
-                                <span class="ml-2">→</span>
+                            <a href="index.php?action=beer_detail&id=<?= $beer['id'] ?>"
+                                class="minecraft-button-3d block text-center">
+                                <span class="block translate-y-[-1px] group-hover:translate-y-[-2px] transition-transform">
+                                    Examiner cette bière
+                                </span>
                             </a>
                         </div>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
-
-        <!-- Message si aucune bière -->
-        <?php if (empty($beers)): ?>
-            <div class="text-center py-12">
-                <p class="text-2xl text-amber-800 mb-4">Aucune bière n'a encore été ajoutée.</p>
-                <a href="index.php?action=add_beer"
-                    class="inline-flex items-center px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-all duration-300">
-                    <span class="mr-2">Ajouter la première bière</span>
-                    <span>🍺</span>
-                </a>
-            </div>
-        <?php endif; ?>
     </div>
 </div>
 
 <style>
-    @keyframes float-slow {
+    .minecraft-background {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='%23422006' fill-opacity='0.4' d='M0 0h8v8H0V0zm8 8h8v8H8V8zm16-8h8v8h-8V0zm8 8h8v8h-8V8zm-8 0h8v8h-8V8zM8 16h8v8H8v-8zm16 0h8v8h-8v-8zM0 16h8v8H0v-8zM24 0h8v8h-8V0z'/%3E%3C/svg%3E");
+        background-color: #2b1508;
+    }
+
+    .minecraft-card {
+        transform-style: preserve-3d;
+        transition: transform 0.3s;
+    }
+
+    .minecraft-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .pixel-border {
+        border: 4px solid;
+        border-color: #594131 #2b1508 #2b1508 #594131;
+        image-rendering: pixelated;
+    }
+
+    .minecraft-image-container::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(45deg, rgba(0, 0, 0, 0.2) 0%, transparent 100%);
+        z-index: 1;
+    }
+
+    .minecraft-pixelate {
+        image-rendering: pixelated;
+        filter: contrast(1.1) saturate(1.2);
+    }
+
+    .minecraft-pattern {
+        background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='20' height='20' fill='%23713f12' /%3E%3Cpath d='M0 0h10v10H0V0zm10 10h10v10H10V10z' fill='%238B4513' fill-opacity='.4'/%3E%3C/svg%3E");
+        background-size: 16px 16px;
+    }
+
+    .minecraft-item-frame {
+        border: 4px solid #4a3422;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.2);
+        box-shadow: inset 0 0 0 4px rgba(255, 255, 255, 0.1);
+    }
+
+    .minecraft-stat-box {
+        @apply flex items-center gap-2 px-3 py-2 rounded;
+        background-color: rgba(0, 0, 0, 0.2);
+        border: 2px solid;
+        border-color: #594131 #2b1508 #2b1508 #594131;
+        color: #fcd34d;
+        font-family: 'Minecraft', system-ui;
+    }
+
+    .minecraft-button-3d {
+        background: linear-gradient(to bottom, #8B4513, #713f12);
+        border: 2px solid #2b1508;
+        padding: 0.75rem;
+        color: #fcd34d;
+        font-family: 'Minecraft', system-ui;
+        text-transform: uppercase;
+        position: relative;
+        text-shadow: 2px 2px #000;
+        box-shadow:
+            inset -2px -4px #2b1508,
+            inset 2px 2px rgba(255, 255, 255, 0.2);
+    }
+
+    .minecraft-button-3d:hover {
+        background: linear-gradient(to bottom, #9B5523, #814f22);
+    }
+
+    .minecraft-button-3d:active {
+        box-shadow:
+            inset 2px 4px #2b1508,
+            inset -2px -2px rgba(255, 255, 255, 0.2);
+    }
+
+    .pixel-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(45deg,
+                rgba(43, 21, 8, 0.7) 0%,
+                transparent 40%,
+                transparent 60%,
+                rgba(43, 21, 8, 0.7) 100%);
+    }
+
+    .minecraft-title {
+        font-family: 'Press Start 2P', system-ui;
+        text-shadow: 2px 2px 0 #000,
+            -2px -2px 0 #000,
+            2px -2px 0 #000,
+            -2px 2px 0 #000,
+            0 3px #000;
+        letter-spacing: 2px;
+    }
+
+    .minecraft-text {
+        font-family: 'Minecraft', system-ui;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    }
+
+    .minecraft-stat {
+        @apply flex items-center gap-2 px-3 py-2 bg-[#1a0f05] rounded;
+        border: 2px solid;
+        border-color: #594131 #2b1508 #2b1508 #594131;
+        color: #fcd34d;
+    }
+
+    .minecraft-button {
+        @apply px-4 py-3 text-yellow-300 font-bold uppercase tracking-wide;
+        background-color: #594131;
+        border: 3px solid;
+        border-color: #7c5a43 #2b1508 #2b1508 #7c5a43;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+        transition: all 0.1s;
+    }
+
+    .minecraft-button:hover {
+        background-color: #7c5a43;
+        transform: translateY(-2px);
+    }
+
+    .minecraft-button:active {
+        transform: translateY(2px);
+    }
+
+    .pixelated {
+        image-rendering: pixelated;
+    }
+
+    @keyframes pixel-float {
 
         0%,
         100% {
-            transform: translateY(0) rotate(0);
-            opacity: 0.7;
+            transform: translate(0, 0) rotate(0deg);
         }
 
         50% {
-            transform: translateY(-15px) rotate(5deg);
-            opacity: 0.3;
+            transform: translate(-5px, -10px) rotate(5deg);
         }
     }
 
-    .animate-float-slow {
-        animation: float-slow 8s ease-in-out infinite;
+    .pixel-float {
+        animation: pixel-float 3s ease-in-out infinite;
         font-size: 1.5rem;
     }
 </style>

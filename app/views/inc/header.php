@@ -1,149 +1,142 @@
-<header class="bg-gray-900 text-white relative overflow-hidden">
-    <!-- Éléments décoratifs -->
-    <div class="absolute inset-0 opacity-5">
-        <?php for ($i = 0; $i < 8; $i++): ?>
-            <div class="absolute animate-float-slow"
-                style="left: <?= rand(0, 100) ?>%; top: <?= rand(-20, 100) ?>%; animation-delay: <?= rand(0, 3000) ?>ms">
-                <?= ['🍺', '🌾', '🍻'][rand(0, 2)] ?>
-            </div>
-        <?php endfor; ?>
-    </div>
+<header class="minecraft-header relative">
+    <!-- Stone texture background -->
+    <div class="stone-texture absolute inset-0"></div>
 
-    <div class="container mx-auto px-4 py-4 relative z-10">
-        <div class="flex justify-between items-center">
-            <!-- Logo avec animation -->
-            <a href="index.php" class="group flex items-center space-x-2 transform hover:scale-105 transition-all duration-300">
-                <span class="text-3xl group-hover:rotate-12 transition-transform duration-300">🍺</span>
-                <span class="text-2xl font-bold bg-gradient-to-r from-yellow-300 to-amber-300 text-transparent bg-clip-text">
-                    BeerCraft
-                </span>
+    <div class="container mx-auto px-4 relative z-10">
+        <div class="flex items-center justify-between py-4">
+            <!-- Logo Zone -->
+            <a href="index.php" class="minecraft-logo-block group">
+                <div class="crafting-table">
+                    <div class="crafting-grid">
+                        <span class="text-3xl transform group-hover:scale-110 transition-all duration-300">🍺</span>
+                    </div>
+                </div>
+                <h1 class="pixel-title">
+                    <span class="text-yellow-300">Beer</span>
+                    <span class="text-amber-500">Craft</span>
+                </h1>
             </a>
 
-            <!-- Menu Desktop -->
-            <nav class="hidden md:flex items-center space-x-4">
+            <!-- Navigation principale -->
+            <nav class="hidden md:flex items-center gap-4">
                 <?php if (isset($_SESSION['user'])): ?>
-                    <!-- Bouton Ajouter une Bière (visible uniquement si connecté) -->
-                    <a href="index.php?action=add_beer"
-                        class="bg-gradient-to-r from-yellow-500 to-amber-500 px-4 py-2 rounded-lg 
-                              hover:from-yellow-600 hover:to-amber-600 transform hover:scale-105
-                              transition-all duration-200 shadow-lg hover:shadow-xl">
-                        <span class="flex items-center">
-                            <span class="mr-2">Ajouter une Bière</span>
-                            <span class="text-xl">🍺</span>
+                    <div class="minecraft-nameplate">
+                        <span class="nameplate-icon">⛏️</span>
+                        <span class="nameplate-text">
+                            <?= htmlspecialchars($_SESSION['user']['first_name']) ?>
                         </span>
-                    </a>
-
-                    <!-- Menu utilisateur connecté -->
-                    <a href="index.php?action=dashboard"
-                        class="flex items-center px-4 py-2 border-2 border-yellow-400 rounded-lg
-                              hover:bg-yellow-400 hover:text-gray-900
-                              transition-all duration-200 group">
-                        <span class="mr-2">👋</span>
-                        <span><?= htmlspecialchars($_SESSION['user']['first_name']) ?></span>
-                    </a>
-
-                    <!-- Bouton Déconnexion -->
-                    <a href="index.php?action=logout"
-                        class="flex items-center px-4 py-2 border-2 border-red-400 rounded-lg
-                              hover:bg-red-400 hover:text-white
-                              transition-all duration-200 group">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        <span>Déconnexion</span>
-                    </a>
+                    </div>
+                    <div class="menu-buttons">
+                        <a href="index.php?action=dashboard" class="mc-button stone">
+                            <span class="button-text">Dashboard</span>
+                        </a>
+                        <a href="index.php?action=add_beer" class="mc-button wood">
+                            <span class="button-icon">+</span>
+                            <span class="button-text">Ajouter une bière</span>
+                        </a>
+                        <a href="index.php?action=logout" class="mc-button netherrack">
+                            <span class="button-text">Déconnexion</span>
+                        </a>
+                    </div>
                 <?php else: ?>
-                    <!-- Boutons pour utilisateur non connecté -->
-                    <a href="index.php?action=register"
-                        class="flex items-center px-4 py-2 border-2 border-yellow-400 rounded-lg
-                              hover:bg-yellow-400 hover:text-gray-900
-                              transition-all duration-200 group">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                        </svg>
-                        <span>Inscription</span>
-                    </a>
-
-                    <!-- Bouton Connexion -->
-                    <a href="index.php?action=login"
-                        class="flex items-center px-4 py-2 border-2 border-amber-400 rounded-lg
-                              hover:bg-amber-400 hover:text-gray-900
-                              transition-all duration-200 group">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                        </svg>
-                        <span>Connexion</span>
-                    </a>
+                    <div class="menu-buttons">
+                        <a href="index.php?action=login" class="mc-button stone">
+                            <span class="button-text">Connexion</span>
+                        </a>
+                        <a href="index.php?action=register" class="mc-button emerald">
+                            <span class="button-text">Inscription</span>
+                        </a>
+                    </div>
                 <?php endif; ?>
             </nav>
-
-            <!-- Bouton Menu Mobile -->
-            <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-amber-700 transition-colors duration-200">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-            </button>
         </div>
-
-        <!-- Menu Mobile -->
-        <nav id="mobile-menu" class="hidden md:hidden mt-4 bg-amber-800/50 backdrop-blur-md rounded-lg overflow-hidden">
-            <?php if (isset($_SESSION['user'])): ?>
-                <a href="index.php?action=add_beer" class="mobile-nav-link bg-yellow-500/20 font-semibold">
-                    <span class="flex items-center">Ajouter une Bière 🍺</span>
-                </a>
-                <a href="index.php?action=dashboard" class="mobile-nav-link border-t border-amber-700/50">
-                    <span class="flex items-center">
-                        <span class="mr-2">👋</span>
-                        <?= htmlspecialchars($_SESSION['user']['first_name']) ?>
-                    </span>
-                </a>
-                <a href="index.php?action=logout" class="mobile-nav-link border-t border-amber-700/50">
-                    <span class="flex items-center text-red-300 hover:text-red-100">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                        Déconnexion
-                    </span>
-                </a>
-            <?php else: ?>
-                <a href="index.php?action=register" class="mobile-nav-link border-t border-amber-700/50">
-                    <span class="flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                        </svg>
-                        Inscription
-                    </span>
-                </a>
-                <a href="index.php?action=login" class="mobile-nav-link border-t border-amber-700/50">
-                    <span class="flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                        </svg>
-                        Connexion
-                    </span>
-                </a>
-            <?php endif; ?>
-        </nav>
     </div>
 </header>
 
 <style>
-    .mobile-nav-link {
-        @apply block py-3 px-4 text-amber-100 hover:bg-amber-700/50 transition-all duration-200;
+    .minecraft-header {
+        background-color: #1A1A1A;
+        border-bottom: 4px solid #2D2D2D;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
 
-    @keyframes float-slow {
+    .stone-texture {
+        background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='64' height='64' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E"),
+            linear-gradient(to bottom, #2D2D2D, #1A1A1A);
+        opacity: 0.9;
+    }
 
-        0%,
-        100% {
-            transform: translateY(0) rotate(0);
-            opacity: 0.7;
-        }
+    .minecraft-logo-block {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .crafting-table {
+        width: 3rem;
+        height: 3rem;
+        background: #8B4513;
+        border: 3px solid #A0522D;
+        box-shadow: inset -2px -2px 0 #2B1508, inset 2px 2px 0 rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .pixel-title {
+        font-size: 1.75rem;
+        font-weight: bold;
+        font-family: 'Minecraft', monospace;
+        text-shadow: 2px 2px 0 #000;
+    }
+
+    .minecraft-nameplate {
+        padding: 0.5rem 1rem;
+        background-color: rgba(139, 69, 19, 0.3);
+        border: 2px solid rgba(139, 69, 19, 0.6);
+        border-radius: 4px;
+    }
+
+    .menu-buttons {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .mc-button {
+        padding: 0.5rem 1rem;
+        font-family: 'Minecraft', monospace;
+        border: 3px solid;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+        transition: transform 0.1s, filter 0.1s;
+    }
+
+    .mc-button:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.2);
+    }
+
+    .mc-button.stone {
+        background-color: #707070;
+        border-color: #808080;
+        color: #fff;
+    }
+
+    .mc-button.wood {
+        background-color: #8B4513;
+        border-color: #A0522D;
+        color: #FFE4C4;
+    }
+
+    .mc-button.netherrack {
+        background-color: #8B0000;
+        border-color: #A00000;
+        color: #FFA07A;
+    }
+
+    .mc-button.emerald {
+        background-color: #2E8B57;
+        border-color: #3CB371;
+        color: #98FB98;
     }
 </style>

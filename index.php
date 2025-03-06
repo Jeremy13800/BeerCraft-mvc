@@ -33,6 +33,14 @@ switch ($action) {
         $controller = new UserController();
         $controller->logout();
         break;
+    case 'beer_detail':
+        $controller = new BeerController();
+        $controller->detail($_GET['id'] ?? null);
+        break;
+    case 'add_comment':
+        $controller = new BeerController();
+        $controller->addComment();
+        break;
     default:
         $controller = new BeerController();
         $controller->index();
