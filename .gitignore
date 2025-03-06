@@ -1,0 +1,11 @@
+.env
+uploads/*
+!uploads/.gitkeep
+cache/*
+!cache/.gitkeep
+logs/*
+!logs/.gitkeep
+vendor/
+node_modules/
+.DS_Store
+Thumbs.db
