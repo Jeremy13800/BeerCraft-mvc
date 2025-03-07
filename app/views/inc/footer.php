@@ -53,7 +53,7 @@
         <!-- Copyright -->
         <div class="text-center">
             <p class="mc-text text-gray-400">
-                BeerCraft © 2024 | Crafté avec <span class="inline-block animate-bounce">⚒️</span>
+                BeerCraft © 2025 | Crafté avec <span class="inline-block animate-bounce">⚒️</span>
             </p>
         </div>
     </div>

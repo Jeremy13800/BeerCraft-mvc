@@ -24,15 +24,15 @@ class Beer
 
     public function getBeerById($id)
     {
-        try {
-            $stmt = $this->db->prepare("SELECT * FROM beer WHERE id = :id");
-            $stmt->execute([':id' => $id]);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            error_log("Erreur dans getBeerById: " . $e->getMessage());
-            return false;
-        }
+        $query = "SELECT * FROM beer WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+
 
 
     public function addBeer($name, $origin, $alcohol, $description, $image)
@@ -51,7 +51,7 @@ class Beer
                 ':origin' => $origin,
                 ':alcohol' => floatval($alcohol),
                 ':description' => $description,
-                ':image' => !empty($image) ?  $image : null
+                ':image' => !empty($image) ? $image : null
             ]);
 
             if ($result) {

@@ -40,11 +40,11 @@
                     </div>
                 <?php else: ?>
                     <div class="menu-buttons">
-                        <a href="index.php?action=login" class="mc-button stone">
-                            <span class="button-text">Connexion</span>
+                        <a href="index.php?action=login" class="mc-button stone p-1">
+                            <span class="button-text p-3">Connexion</span>
                         </a>
-                        <a href="index.php?action=register" class="mc-button emerald">
-                            <span class="button-text">Inscription</span>
+                        <a href="index.php?action=register" class="mc-button emerald p-1">
+                            <span class="button-text p-3">Inscription</span>
                         </a>
                     </div>
                 <?php endif; ?>
@@ -104,39 +104,43 @@
     }
 
     .mc-button {
-        padding: 0.5rem 1rem;
+        @apply relative px-4 py-2 font-bold;
         font-family: 'Minecraft', monospace;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+        transition: transform 0.1s;
+        transform-style: preserve-3d;
+        background: linear-gradient(to bottom, #8B4513, #713f12);
         border: 3px solid;
-        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
-        transition: transform 0.1s, filter 0.1s;
+        border-color: #594131 #2b1508 #2b1508 #594131;
+        color: #fcd34d;
+        box-shadow:
+            inset -2px -4px #2b1508,
+            inset 2px 2px rgba(255, 255, 255, 0.2);
     }
 
     .mc-button:hover {
         transform: translateY(-2px);
-        filter: brightness(1.2);
+        background: linear-gradient(to bottom, #9B5523, #814f22);
     }
 
-    .mc-button.stone {
-        background-color: #707070;
-        border-color: #808080;
-        color: #fff;
+    .mc-button:active {
+        transform: translateY(1px);
+        box-shadow:
+            inset 2px 4px #2b1508,
+            inset -2px -2px rgba(255, 255, 255, 0.2);
     }
 
-    .mc-button.wood {
-        background-color: #8B4513;
-        border-color: #A0522D;
-        color: #FFE4C4;
-    }
-
-    .mc-button.netherrack {
-        background-color: #8B0000;
-        border-color: #A00000;
-        color: #FFA07A;
-    }
-
+    /* Suppression des anciennes classes de boutons spécifiques */
+    .mc-button.stone,
+    .mc-button.wood,
+    .mc-button.netherrack,
     .mc-button.emerald {
-        background-color: #2E8B57;
-        border-color: #3CB371;
-        color: #98FB98;
+        /* Utilisation du même style pour tous les boutons */
+        background: linear-gradient(to bottom, #8B4513, #713f12);
+        border-color: #594131 #2b1508 #2b1508 #594131;
+        color: #fcd34d;
+        box-shadow:
+            inset -2px -4px #2b1508,
+            inset 2px 2px rgba(255, 255, 255, 0.2);
     }
 </style>

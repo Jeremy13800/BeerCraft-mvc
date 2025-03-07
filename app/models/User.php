@@ -66,4 +66,45 @@ class User
             return ['success' => false, 'error' => "Une erreur est survenue lors de l'inscription."];
         }
     }
+
+    public function getUserStats($userId)
+    {
+        try {
+            // Nombre de bières ajoutées
+            $beerQuery = "SELECT COUNT(*) FROM beer WHERE user_id = :user_id";
+            $beerStmt = $this->db->prepare($beerQuery);
+            $beerStmt->execute([':user_id' => $userId]);
+            $beerCount = $beerStmt->fetchColumn();
+
+            // Nombre de commentaires
+            $commentQuery = "SELECT COUNT(*) as comment_count, AVG(rating) as avg_rating 
+                           FROM comment WHERE user_id = :user_id";
+            $commentStmt = $this->db->prepare($commentQuery);
+            $commentStmt->execute([':user_id' => $userId]);
+            $commentStats = $commentStmt->fetch(PDO::FETCH_ASSOC);
+
+            return [
+                'beer_count' => $beerCount,
+                'comment_count' => $commentStats['comment_count'],
+                'average_rating' => round($commentStats['avg_rating'] ?? 0, 1)
+            ];
+        } catch (PDOException $e) {
+            error_log("Erreur getUserStats: " . $e->getMessage());
+            return ['beer_count' => 0, 'comment_count' => 0, 'average_rating' => 0];
+        }
+    }
+
+    public function isAdmin($userId)
+    {
+        try {
+            $query = "SELECT role FROM users WHERE id = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute([':id' => $userId]);
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result && $result['role'] === 'admin';
+        } catch (PDOException $e) {
+            error_log("Erreur isAdmin: " . $e->getMessage());
+            return false;
+        }
+    }
 }

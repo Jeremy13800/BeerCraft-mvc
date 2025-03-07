@@ -154,8 +154,25 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="flex gap-1">
-                                            <?= str_repeat('🍺', $comment['rating']) ?>
+                                        <div class="flex items-center gap-4">
+                                            <div class="flex gap-1">
+                                                <?= str_repeat('🍺', $comment['rating']) ?>
+                                            </div>
+                                            <?php if (isset($_SESSION['user']) && $_SESSION['user']['id'] == $comment['user_id']): ?>
+                                                <div class="flex gap-2">
+                                                    <button onclick="editComment(<?= htmlspecialchars(json_encode($comment)) ?>)"
+                                                        class="text-amber-600 hover:text-amber-800 transition-colors">
+                                                        <span class="sr-only">Modifier</span>
+                                                        ✏️
+                                                    </button>
+                                                    <a href="index.php?action=delete_comment&comment_id=<?= $comment['id'] ?>&beer_id=<?= $beer['id'] ?>"
+                                                        onclick="return confirm('Voulez-vous vraiment supprimer ce commentaire ?')"
+                                                        class="text-red-600 hover:text-red-800 transition-colors">
+                                                        <span class="sr-only">Supprimer</span>
+                                                        🗑️
+                                                    </a>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                     <p class="text-amber-800 leading-relaxed">
@@ -169,6 +186,67 @@
                             Soyez le premier à donner votre avis sur cette bière !
                         </p>
                     <?php endif; ?>
+
+                    <!-- Modal de modification -->
+                    <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+                        <div class="bg-white rounded-xl p-6 w-full max-w-md mx-4">
+                            <h3 class="text-xl font-bold text-amber-900 mb-4">Modifier mon commentaire</h3>
+                            <form action="index.php?action=edit_comment" method="POST">
+                                <input type="hidden" name="comment_id" id="editCommentId">
+                                <input type="hidden" name="beer_id" value="<?= $beer['id'] ?>">
+
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-amber-800 mb-2">Note</label>
+                                        <div class="flex gap-4">
+                                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                <input type="radio" id="editStar<?= $i ?>"
+                                                    name="rating" value="<?= $i ?>"
+                                                    class="hidden peer">
+                                                <label for="editStar<?= $i ?>"
+                                                    class="text-4xl cursor-pointer opacity-50 hover:opacity-100 
+                                                           transition-opacity peer-checked:opacity-100">
+                                                    🍺
+                                                </label>
+                                            <?php endfor; ?>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-amber-800 mb-2">Votre avis</label>
+                                        <textarea name="content" id="editContent" rows="4" required
+                                            class="w-full rounded-xl border-amber-200 focus:border-amber-400 
+                                                   focus:ring focus:ring-amber-200"></textarea>
+                                    </div>
+                                    <div class="flex justify-end gap-2 mt-4">
+                                        <button type="button" onclick="closeEditModal()"
+                                            class="px-4 py-2 text-amber-700 hover:text-amber-800">
+                                            Annuler
+                                        </button>
+                                        <button type="submit"
+                                            class="px-6 py-2 bg-amber-500 text-white rounded-lg 
+                                                   hover:bg-amber-600 transition-colors">
+                                            Enregistrer
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <script>
+                        function editComment(comment) {
+                            document.getElementById('editCommentId').value = comment.id;
+                            document.getElementById('editContent').value = comment.content;
+                            document.querySelector(`input[name="rating"][value="${comment.rating}"]`).checked = true;
+                            document.getElementById('editModal').classList.remove('hidden');
+                            document.getElementById('editModal').classList.add('flex');
+                        }
+
+                        function closeEditModal() {
+                            document.getElementById('editModal').classList.add('hidden');
+                            document.getElementById('editModal').classList.remove('flex');
+                        }
+                    </script>
                 </div>
             </div>
         </div>

@@ -25,7 +25,7 @@
                     <span class="text-4xl mr-4">🍺</span>
                     <div>
                         <h3 class="text-lg font-semibold text-amber-900">Mes Bières</h3>
-                        <p class="text-2xl font-bold text-amber-600">0</p>
+                        <p class="text-2xl font-bold text-amber-600"><?= $userStats['beer_count'] ?></p>
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                     <span class="text-4xl mr-4">💭</span>
                     <div>
                         <h3 class="text-lg font-semibold text-amber-900">Mes Commentaires</h3>
-                        <p class="text-2xl font-bold text-amber-600">0</p>
+                        <p class="text-2xl font-bold text-amber-600"><?= $userStats['comment_count'] ?></p>
                     </div>
                 </div>
             </div>
@@ -45,7 +45,9 @@
                     <span class="text-4xl mr-4">⭐</span>
                     <div>
                         <h3 class="text-lg font-semibold text-amber-900">Note moyenne</h3>
-                        <p class="text-2xl font-bold text-amber-600">-</p>
+                        <p class="text-2xl font-bold text-amber-600">
+                            <?= $userStats['average_rating'] > 0 ? $userStats['average_rating'] . '/5' : '-' ?>
+                        </p>
                     </div>
                 </div>
             </div>

@@ -96,6 +96,9 @@ class UserController
             exit;
         }
 
+        $userModel = new User();
+        $userStats = $userModel->getUserStats($_SESSION['user']['id']);
+
         $view = "dashboard";
         include_once("app/views/layout.php");
     }

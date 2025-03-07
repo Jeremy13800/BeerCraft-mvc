@@ -17,12 +17,18 @@ class Comment
                     VALUES (:content, :rating, :user_id, :beer_id, NOW())";
 
             $stmt = $this->db->prepare($sql);
-            return $stmt->execute([
+            $result = $stmt->execute([
                 ':content' => $content,
                 ':rating' => $rating,
                 ':user_id' => $userId,
                 ':beer_id' => $beerId
             ]);
+
+            if (!$result) {
+                error_log("Échec de l'ajout du commentaire: " . print_r($stmt->errorInfo(), true));
+                return false;
+            }
+            return true;
         } catch (PDOException $e) {
             error_log("Erreur dans addComment: " . $e->getMessage());
             return false;
@@ -44,6 +50,42 @@ class Comment
         } catch (PDOException $e) {
             error_log("Erreur dans getCommentsForBeer: " . $e->getMessage());
             return [];
+        }
+    }
+
+    public function updateComment($id, $content, $rating, $userId)
+    {
+        try {
+            $sql = "UPDATE comment 
+                    SET content = :content, rating = :rating 
+                    WHERE id = :id AND user_id = :user_id";
+
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                ':content' => $content,
+                ':rating' => $rating,
+                ':id' => $id,
+                ':user_id' => $userId
+            ]);
+        } catch (PDOException $e) {
+            error_log("Erreur dans updateComment: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function deleteComment($id, $userId)
+    {
+        try {
+            $sql = "DELETE FROM comment WHERE id = :id AND user_id = :user_id";
+
+            $stmt = $this->db->prepare($sql);
+            return $stmt->execute([
+                ':id' => $id,
+                ':user_id' => $userId
+            ]);
+        } catch (PDOException $e) {
+            error_log("Erreur dans deleteComment: " . $e->getMessage());
+            return false;
         }
     }
 }

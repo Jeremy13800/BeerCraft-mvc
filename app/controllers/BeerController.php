@@ -1,5 +1,6 @@
 <?php
 require_once "app/models/Beer.php";
+require_once "app/models/Comment.php"; // Ajout de l'inclusion du modèle Comment
 
 class BeerController
 {
@@ -48,13 +49,23 @@ class BeerController
 
     public function detail($id)
     {
-        require_once 'app/models/Comment.php';
+        if (!$id) {
+            header('Location: index.php');
+            exit;
+        }
 
         $beerModel = new Beer();
         $commentModel = new Comment();
+        $userModel = new User();
 
         $beer = $beerModel->getBeerById($id);
+        if (!$beer) {
+            header('Location: index.php');
+            exit;
+        }
+
         $comments = $commentModel->getCommentsForBeer($id);
+        $viewData = compact('beer', 'comments', 'userModel');
 
         $view = "beer_detail";
         include_once("app/views/layout.php");
@@ -76,11 +87,59 @@ class BeerController
                 $commentModel = new Comment();
                 if ($commentModel->addComment($content, $rating, $_SESSION['user']['id'], $beerId)) {
                     $_SESSION['success_message'] = "Votre commentaire a été ajouté avec succès !";
+                } else {
+                    $_SESSION['error_message'] = "Une erreur est survenue lors de l'ajout du commentaire.";
+                }
+            } else {
+                $_SESSION['error_message'] = "Données de commentaire invalides.";
+            }
+            header("Location: index.php?action=beer_detail&id=$beerId");
+            exit;
+        }
+    }
+
+    public function editComment()
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $commentId = filter_input(INPUT_POST, 'comment_id', FILTER_VALIDATE_INT);
+            $beerId = filter_input(INPUT_POST, 'beer_id', FILTER_VALIDATE_INT);
+            $content = trim($_POST['content'] ?? '');
+            $rating = filter_input(INPUT_POST, 'rating', FILTER_VALIDATE_INT);
+
+            if ($commentId && $content && $rating >= 1 && $rating <= 5) {
+                $commentModel = new Comment();
+                if ($commentModel->updateComment($commentId, $content, $rating, $_SESSION['user']['id'])) {
+                    $_SESSION['success_message'] = "Votre commentaire a été modifié !";
                 }
             }
             header("Location: index.php?action=beer_detail&id=$beerId");
             exit;
         }
+    }
+
+    public function deleteComment()
+    {
+        if (!isset($_SESSION['user'])) {
+            header('Location: index.php?action=login');
+            exit;
+        }
+
+        $commentId = filter_input(INPUT_GET, 'comment_id', FILTER_VALIDATE_INT);
+        $beerId = filter_input(INPUT_GET, 'beer_id', FILTER_VALIDATE_INT);
+
+        if ($commentId) {
+            $commentModel = new Comment();
+            if ($commentModel->deleteComment($commentId, $_SESSION['user']['id'])) {
+                $_SESSION['success_message'] = "Votre commentaire a été supprimé !";
+            }
+        }
+        header("Location: index.php?action=beer_detail&id=$beerId");
+        exit;
     }
 
     private function sanitizeInput($data)

@@ -41,6 +41,14 @@ switch ($action) {
         $controller = new BeerController();
         $controller->addComment();
         break;
+    case 'edit_comment':
+        $controller = new BeerController();
+        $controller->editComment();
+        break;
+    case 'delete_comment':
+        $controller = new BeerController();
+        $controller->deleteComment();
+        break;
     default:
         $controller = new BeerController();
         $controller->index();
