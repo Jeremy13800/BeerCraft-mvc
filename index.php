@@ -4,6 +4,7 @@
 require_once "app/models/Database.php";
 require_once "app/controllers/BeerController.php";
 require_once "app/controllers/UserController.php";
+require_once "app/controllers/CommentController.php";
 
 // Récupération de l'action demandée
 $action = $_GET['action'] ?? 'index';
@@ -38,16 +39,28 @@ switch ($action) {
         $controller->detail($_GET['id'] ?? null);
         break;
     case 'add_comment':
-        $controller = new BeerController();
+        $controller = new CommentController();
         $controller->addComment();
         break;
     case 'edit_comment':
-        $controller = new BeerController();
+        $controller = new CommentController();
         $controller->editComment();
         break;
     case 'delete_comment':
-        $controller = new BeerController();
+        $controller = new CommentController();
         $controller->deleteComment();
+        break;
+    case 'edit_beer':
+        $controller = new BeerController();
+        $controller->edit($_GET['id'] ?? null);
+        break;
+    case 'delete_beer':
+        $controller = new BeerController();
+        $controller->delete($_GET['id'] ?? null);
+        break;
+    case 'admin_dashboard':
+        $controller = new BeerController();
+        $controller->adminDashboard();
         break;
     default:
         $controller = new BeerController();

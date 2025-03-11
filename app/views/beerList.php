@@ -81,6 +81,21 @@
                                     Examiner cette bière
                                 </span>
                             </a>
+
+                            <!-- Options Admin -->
+                            <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
+                                <div class="flex gap-2 mt-4">
+                                    <a href="index.php?action=edit_beer&id=<?= $beer['id'] ?>"
+                                        class="minecraft-button-3d bg-emerald-700">
+                                        <span class="block">✏️ Modifier</span>
+                                    </a>
+                                    <a href="index.php?action=delete_beer&id=<?= $beer['id'] ?>"
+                                        onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette bière ?')"
+                                        class="minecraft-button-3d bg-red-700">
+                                        <span class="block">🗑️ Supprimer</span>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

@@ -77,6 +77,14 @@ UPDATE beer
 SET image = NULL
 WHERE name = 'La Chouffe';
 
+UPDATE users 
+SET role = 'member'
+WHERE id = 3;
+
+UPDATE users
+SET role = 'admin'
+WHERE id = 4;
+
 INSERT INTO beer_category (beer_id, category_id) VALUES
 (1, 1),
 (2, 2),

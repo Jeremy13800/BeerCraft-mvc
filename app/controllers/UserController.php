@@ -2,6 +2,7 @@
 require_once "app/models/User.php";
 
 class UserController
+//Cette classe gère les actions liées aux utilisateurs
 {
     public function register()
     {
@@ -96,10 +97,17 @@ class UserController
             exit;
         }
 
-        $userModel = new User();
-        $userStats = $userModel->getUserStats($_SESSION['user']['id']);
+        $userId = $_SESSION['user']['id'];
+        $commentModel = new Comment();
+
+        $userStats = [
+            'comment_count' => $commentModel->getUserCommentCount($userId),
+            'average_rating' => $commentModel->getUserAverageRating($userId),
+            'recent_comments' => $commentModel->getUserRecentComments($userId, 5) // 5 derniers commentaires
+        ];
 
         $view = "dashboard";
+        $viewData = compact('userStats');
         include_once("app/views/layout.php");
     }
 

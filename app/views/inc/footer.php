@@ -36,7 +36,7 @@
                     <div class="space-y-3">
                         <div class="mc-item text-white">
                             <span class="item-sprite">📬</span>
-                            <span>contact@beercraft.be</span>
+                            <span>contact@beercraft.fr</span>
                         </div>
                         <div class="mc-item text-white">
                             <span class="item-sprite">📍</span>

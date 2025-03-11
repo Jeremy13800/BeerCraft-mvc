@@ -32,9 +32,6 @@ class Beer
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-
-
-
     public function addBeer($name, $origin, $alcohol, $description, $image)
     {
         try {
@@ -63,6 +60,43 @@ class Beer
             }
         } catch (PDOException $e) {
             error_log("Erreur dans addBeer: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function updateBeer($id, $data)
+    {
+        try {
+            $query = "UPDATE beer SET 
+                        name = :name, 
+                        origin = :origin, 
+                        alcohol = :alcohol, 
+                        description = :description, 
+                        image = :image 
+                      WHERE id = :id";
+
+            $stmt = $this->db->prepare($query);
+            return $stmt->execute([
+                ':id' => $id,
+                ':name' => $data['name'],
+                ':origin' => $data['origin'],
+                ':alcohol' => floatval($data['alcohol']),
+                ':description' => $data['description'],
+                ':image' => !empty($data['image']) ? $data['image'] : null
+            ]);
+        } catch (PDOException $e) {
+            error_log("Erreur dans updateBeer: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function deleteBeer($id)
+    {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM beer WHERE id = :id");
+            return $stmt->execute([':id' => $id]);
+        } catch (PDOException $e) {
+            error_log("Erreur dans deleteBeer: " . $e->getMessage());
             return false;
         }
     }

@@ -40,9 +40,7 @@
         <?php endif; ?>
 
         <!-- Formulaire stylisé -->
-        <form action="index.php?action=add_beer" method="POST"
-            class="bg-white/80 backdrop-blur-md shadow-2xl rounded-xl p-8 space-y-8 border-t border-white/60">
-
+        <form action="index.php?action=add_beer" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-12">
             <!-- Grille 2 colonnes pour les champs courts -->
             <div class="grid md:grid-cols-2 gap-6">
                 <!-- Nom de la bière -->
@@ -93,30 +91,19 @@
             </div>
 
             <!-- Image de la bière -->
-            <div class="space-y-2 group">
-                <label class="block text-lg font-semibold text-amber-900 group-hover:text-amber-700 transition-colors">
-                    <span class="inline-block mr-2">📸</span> Photo de la bière
+            <div class="crafting-slot p-6">
+                <label class="slot-label text-xl mb-4 text-yellow-200/80">
+                    <span class="icon text-2xl">🖼️</span> Image de la bière
                 </label>
-                <div class="flex items-center space-x-4">
-                    <label class="flex-1 cursor-pointer">
-                        <div class="relative group">
-                            <input type="file" name="image" accept="image/*"
-                                class="hidden"
-                                onchange="updateImagePreview(this)">
-                            <div class="w-full px-4 py-3 rounded-lg border-2 border-dashed border-amber-200 
-                                      hover:border-amber-400 focus:border-amber-400 
-                                      transition-all duration-200 bg-white/50 backdrop-blur
-                                      flex items-center justify-center">
-                                <span id="fileName" class="text-amber-800">Choisir une image</span>
-                            </div>
-                        </div>
-                    </label>
-                    <!-- Prévisualisation de l'image -->
-                    <div id="imagePreview" class="hidden w-16 h-16 rounded-lg overflow-hidden bg-amber-100">
-                        <img src="" alt="Prévisualisation" class="w-full h-full object-cover">
-                    </div>
-                </div>
-                <p class="text-sm text-amber-700 mt-1">Formats acceptés : JPG, PNG, GIF (max 5MB)</p>
+                <input type="file"
+                    name="image"
+                    accept="image/jpeg,image/png,image/webp"
+                    class="minecraft-input text-lg py-4 file:mr-4 file:py-2 file:px-4 
+                              file:rounded-full file:border-0 file:text-yellow-400 
+                              file:bg-amber-900 hover:file:bg-amber-800">
+                <p class="text-sm text-yellow-200/60 mt-2">
+                    Formats acceptés : JPG, PNG, WEBP (max 5MB)
+                </p>
             </div>
 
             <script>

@@ -12,29 +12,35 @@
                     </div>
                 </div>
                 <h1 class="pixel-title">
-                    <span class="text-yellow-300">Beer</span>
-                    <span class="text-amber-500">Craft</span>
+                    <span class="text-yellow-300">Beer<span class="text-amber-500">Craft</span></span>
+
                 </h1>
             </a>
 
             <!-- Navigation principale -->
             <nav class="hidden md:flex items-center gap-4">
                 <?php if (isset($_SESSION['user'])): ?>
-                    <div class="minecraft-nameplate">
-                        <span class="nameplate-icon">⛏️</span>
+                    <div class="minecraft-nameplate <?= $_SESSION['user']['role'] === 'member' ? 'member-plate' : 'admin-plate' ?>">
+                        <span class="nameplate-icon"><?= $_SESSION['user']['role'] === 'member' ? '🌿' : '⚔️' ?></span>
                         <span class="nameplate-text">
                             <?= htmlspecialchars($_SESSION['user']['first_name']) ?>
                         </span>
                     </div>
                     <div class="menu-buttons">
-                        <a href="index.php?action=dashboard" class="mc-button stone">
+                        <a href="index.php?action=dashboard" class="mc-button stone p-1">
                             <span class="button-text">Dashboard</span>
                         </a>
-                        <a href="index.php?action=add_beer" class="mc-button wood">
-                            <span class="button-icon">+</span>
-                            <span class="button-text">Ajouter une bière</span>
-                        </a>
-                        <a href="index.php?action=logout" class="mc-button netherrack">
+                        <?php if ($_SESSION['user']['role'] === 'admin'): ?>
+                            <a href="index.php?action=add_beer" class="mc-button wood p-1">
+                                <span class="button-icon">+</span>
+                                <span class="button-text">Ajouter une bière</span>
+                            </a>
+                            <a href="index.php?action=admin_dashboard" class="mc-button admin p-1">
+                                <span class="button-icon">⚡</span>
+                                <span class="button-text">Admin Panel</span>
+                            </a>
+                        <?php endif; ?>
+                        <a href="index.php?action=logout" class="mc-button netherrack p-1">
                             <span class="button-text">Déconnexion</span>
                         </a>
                     </div>
@@ -92,9 +98,24 @@
 
     .minecraft-nameplate {
         padding: 0.5rem 1rem;
-        background-color: rgba(139, 69, 19, 0.3);
-        border: 2px solid rgba(139, 69, 19, 0.6);
+        border: 2px solid;
         border-radius: 4px;
+    }
+
+    .member-plate {
+        background-color: rgba(34, 139, 34, 0.3);
+        /* Vert forêt */
+        border-color: rgba(34, 139, 34, 0.6);
+        color: #98FB98;
+        /* Vert pâle */
+    }
+
+    .admin-plate {
+        background-color: rgba(139, 69, 19, 0.3);
+        /* Marron */
+        border-color: rgba(139, 69, 19, 0.6);
+        color: #FFD700;
+        /* Or */
     }
 
     .menu-buttons {

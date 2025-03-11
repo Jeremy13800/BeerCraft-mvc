@@ -3,7 +3,10 @@ require_once "app/models/Beer.php";
 require_once "app/models/Comment.php"; // Ajout de l'inclusion du modèle Comment
 
 class BeerController
+// Cette classe gère les actions liées aux bières
 {
+
+    // Définition d'une nouvelle fonction pour afficher la liste des bières
     public function index()
     {
         $beerModel = new Beer();
@@ -13,16 +16,33 @@ class BeerController
         include_once("app/views/layout.php");
     }
 
+
+    // Définition d'une nouvelle fonction pour ajouter une bière
     public function add()
     {
+        // Vérification du rôle admin
+        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+            $_SESSION['error_message'] = "Accès non autorisé. Seuls les administrateurs peuvent ajouter des bières.";
+            header('Location: index.php');
+            exit;
+        }
+
         $errors = [];
         $success = false;
         $formData = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $formData = $this->sanitizeInput($_POST);
-            $formData['image'] = UPLOADS_DIR . $formData['image'];
-            $errors = $this->validateBeerData($formData);
+
+            // Gestion de l'upload d'image
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadResult = $this->handleImageUpload($_FILES['image']);
+                if ($uploadResult['success']) {
+                    $formData['image'] = $uploadResult['path'];
+                } else {
+                    $errors[] = $uploadResult['error'];
+                }
+            }
 
             if (empty($errors)) {
                 $beerModel = new Beer();
@@ -47,6 +67,8 @@ class BeerController
         include_once("app/views/layout.php");
     }
 
+
+    // Définition d'une nouvelle fonction pour afficher le détail d'une bière
     public function detail($id)
     {
         if (!$id) {
@@ -71,80 +93,88 @@ class BeerController
         include_once("app/views/layout.php");
     }
 
-    public function addComment()
+
+    // Définition d'une nouvelle fonction pour supprimer d'une bière
+    public function delete($id)
     {
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?action=login');
+        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+            $_SESSION['error_message'] = "Accès non autorisé";
+            header('Location: index.php');
             exit;
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $beerId = filter_input(INPUT_POST, 'beer_id', FILTER_VALIDATE_INT);
-            $content = trim($_POST['content'] ?? '');
-            $rating = filter_input(INPUT_POST, 'rating', FILTER_VALIDATE_INT);
-
-            if ($beerId && $content && $rating >= 1 && $rating <= 5) {
-                $commentModel = new Comment();
-                if ($commentModel->addComment($content, $rating, $_SESSION['user']['id'], $beerId)) {
-                    $_SESSION['success_message'] = "Votre commentaire a été ajouté avec succès !";
-                } else {
-                    $_SESSION['error_message'] = "Une erreur est survenue lors de l'ajout du commentaire.";
-                }
+        if ($id) {
+            $beerModel = new Beer();
+            if ($beerModel->deleteBeer($id)) {
+                $_SESSION['success_message'] = "La bière a été supprimée avec succès.";
             } else {
-                $_SESSION['error_message'] = "Données de commentaire invalides.";
-            }
-            header("Location: index.php?action=beer_detail&id=$beerId");
-            exit;
-        }
-    }
-
-    public function editComment()
-    {
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?action=login');
-            exit;
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $commentId = filter_input(INPUT_POST, 'comment_id', FILTER_VALIDATE_INT);
-            $beerId = filter_input(INPUT_POST, 'beer_id', FILTER_VALIDATE_INT);
-            $content = trim($_POST['content'] ?? '');
-            $rating = filter_input(INPUT_POST, 'rating', FILTER_VALIDATE_INT);
-
-            if ($commentId && $content && $rating >= 1 && $rating <= 5) {
-                $commentModel = new Comment();
-                if ($commentModel->updateComment($commentId, $content, $rating, $_SESSION['user']['id'])) {
-                    $_SESSION['success_message'] = "Votre commentaire a été modifié !";
-                }
-            }
-            header("Location: index.php?action=beer_detail&id=$beerId");
-            exit;
-        }
-    }
-
-    public function deleteComment()
-    {
-        if (!isset($_SESSION['user'])) {
-            header('Location: index.php?action=login');
-            exit;
-        }
-
-        $commentId = filter_input(INPUT_GET, 'comment_id', FILTER_VALIDATE_INT);
-        $beerId = filter_input(INPUT_GET, 'beer_id', FILTER_VALIDATE_INT);
-
-        if ($commentId) {
-            $commentModel = new Comment();
-            if ($commentModel->deleteComment($commentId, $_SESSION['user']['id'])) {
-                $_SESSION['success_message'] = "Votre commentaire a été supprimé !";
+                $_SESSION['error_message'] = "Erreur lors de la suppression de la bière.";
             }
         }
-        header("Location: index.php?action=beer_detail&id=$beerId");
+        header('Location: index.php');
         exit;
     }
 
+
+    // Définition d'une nouvelle fonction pour modifier une bière
+    public function edit($id)
+    {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+            $_SESSION['error_message'] = "Accès non autorisé";
+            header('Location: index.php');
+            exit;
+        }
+
+        $beerModel = new Beer();
+        $beer = $beerModel->getBeerById($id);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $formData = $this->sanitizeInput($_POST);
+            // Accès à une propriété ou méthode de l'objet actuel
+            $errors = $this->validateBeerData($formData);
+            // Accès à une propriété ou méthode de l'objet actuel
+
+            if (empty($errors)) {
+                if ($beerModel->updateBeer($id, $formData)) {
+                    $_SESSION['success_message'] = "La bière a été modifiée avec succès.";
+                    header('Location: index.php?action=beer_detail&id=' . $id);
+                    exit;
+                }
+                $errors[] = "Erreur lors de la modification de la bière.";
+            }
+        }
+
+        $view = "edit_beer";
+        include_once("app/views/layout.php");
+    }
+
+
+    // Définition d'une nouvelle fonction pour afficher le tableau de bord de l'administrateur
+    public function adminDashboard()
+    {
+        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+            $_SESSION['error_message'] = "Accès non autorisé";
+            header('Location: index.php');
+            exit;
+        }
+
+        $beerModel = new Beer();
+        $commentModel = new Comment();
+
+        $beers = $beerModel->getAll();
+        $allComments = $commentModel->getAllComments();
+
+        $viewData = compact('beers', 'allComments');
+        $view = "admin_dashboard";
+        include_once("app/views/layout.php");
+    }
+
+
+    // Définition d'une nouvelle fonction pour nettoyer les données d'une bière
     private function sanitizeInput($data)
     {
         return [
+            // Retourne le résultat de la fonction
             'name' => trim(htmlspecialchars($data['name'] ?? '')),
             'origin' => trim(htmlspecialchars($data['origin'] ?? '')),
             'alcohol' => filter_var($data['alcohol'] ?? 0, FILTER_VALIDATE_FLOAT),
@@ -153,6 +183,8 @@ class BeerController
         ];
     }
 
+
+    // Définition d'une nouvelle fonction pour valider les données d'une bière
     private function validateBeerData($data)
     {
         $errors = [];
@@ -173,7 +205,37 @@ class BeerController
             $errors[] = "L'URL de l'image n'est pas valide. {$data['image']}";
         }
 
-        //FILTER_VALIDATE_URL
         return $errors;
+        // Retourne le résultat de la fonction
+    }
+    // Definition d'une nouvelle fonction pour gérer l'upload d'une image
+    private function handleImageUpload($file)
+    {
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        $maxSize = 5 * 1024 * 1024; // 5MB
+
+        // Vérifications de base
+        if (!in_array($file['type'], $allowedTypes)) {
+            return ['success' => false, 'error' => 'Format de fichier non autorisé. Utilisez JPG, PNG ou WEBP.'];
+        }
+
+        if ($file['size'] > $maxSize) {
+            return ['success' => false, 'error' => 'L\'image est trop volumineuse (max 5MB).'];
+        }
+
+        // Génération d'un nom de fichier unique
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $newFileName = uniqid('beer_') . '.' . $extension;
+        $uploadPath = 'uploads/' . $newFileName;
+
+        // Déplacement du fichier
+        if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
+            return [
+                'success' => true,
+                'path' => $uploadPath
+            ];
+        }
+
+        return ['success' => false, 'error' => 'Erreur lors de l\'upload du fichier.'];
     }
 }

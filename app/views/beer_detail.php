@@ -1,8 +1,16 @@
-<div class="relative min-h-screen bg-gradient-to-br from-amber-900 via-amber-800 to-amber-700">
-    <!-- Effet de mousse animée -->
-    <div class="absolute inset-0 overflow-hidden">
-        <div class="foam-layer"></div>
-        <div class="bubbles-layer"></div>
+<div class="relative min-h-screen minecraft-background">
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <?php
+        $pixels = ['⬜', '🟫', '🟨'];
+        for ($i = 0; $i < 150; $i++): ?>
+            <div class="absolute pixel-float"
+                style="left: <?= rand(0, 100) ?>%; 
+                       top: <?= rand(-20, 120) ?>%; 
+                       animation-delay: <?= rand(0, 3000) ?>ms;
+                       opacity: <?= rand(2, 5) / 10 ?>;">
+                <?= $pixels[array_rand($pixels)] ?>
+            </div>
+        <?php endfor; ?>
     </div>
 
     <div class="relative z-10 pt-8 pb-16 px-4">
@@ -158,18 +166,20 @@
                                             <div class="flex gap-1">
                                                 <?= str_repeat('🍺', $comment['rating']) ?>
                                             </div>
-                                            <?php if (isset($_SESSION['user']) && $_SESSION['user']['id'] == $comment['user_id']): ?>
+                                            <?php if (isset($_SESSION['user']) && ($_SESSION['user']['id'] == $comment['user_id'] || $_SESSION['user']['role'] === 'admin')): ?>
                                                 <div class="flex gap-2">
-                                                    <button onclick="editComment(<?= htmlspecialchars(json_encode($comment)) ?>)"
-                                                        class="text-amber-600 hover:text-amber-800 transition-colors">
-                                                        <span class="sr-only">Modifier</span>
-                                                        ✏️
-                                                    </button>
+                                                    <?php if ($_SESSION['user']['id'] == $comment['user_id']): ?>
+                                                        <button onclick="editComment(<?= htmlspecialchars(json_encode($comment)) ?>)"
+                                                            class="text-amber-600 hover:text-amber-800 transition-colors cursor-pointer">
+                                                            <span class="sr-only">Modifier</span>
+                                                            ✏️
+                                                        </button>
+                                                    <?php endif; ?>
                                                     <a href="index.php?action=delete_comment&comment_id=<?= $comment['id'] ?>&beer_id=<?= $beer['id'] ?>"
                                                         onclick="return confirm('Voulez-vous vraiment supprimer ce commentaire ?')"
-                                                        class="text-red-600 hover:text-red-800 transition-colors">
+                                                        class="text-red-600 hover:text-red-800 transition-colors cursor-pointer">
                                                         <span class="sr-only">Supprimer</span>
-                                                        🗑️
+                                                        <?= $_SESSION['user']['role'] === 'admin' ? '🗑️ [Admin]' : '🗑️' ?>
                                                     </a>
                                                 </div>
                                             <?php endif; ?>
@@ -254,7 +264,12 @@
 </div>
 
 <style>
-    .foam-layer {
+    .minecraft-background {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath fill='%23422006' fill-opacity='0.4' d='M0 0h8v8H0V0zm8 8h8v8H8V8zm16-8h8v8h-8V0zm8 8h8v8h-8V8zm-8 0h8v8h-8V8zM8 16h8v8H8v-8zm16 0h8v8h-8v-8zM0 16h8v8H0v-8zM24 0h8v8h-8V0z'/%3E%3C/svg%3E");
+        background-color: #2b1508;
+    }
+
+    /* .foam-layer {
         position: absolute;
         top: 0;
         left: 0;
@@ -274,7 +289,7 @@
         inset: 0;
         background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
         animation: bubble-rise 20s linear infinite;
-    }
+    } */
 
     .beer-mug {
         width: 200px;
@@ -312,25 +327,20 @@
         @apply hover:shadow-xl transition-all duration-300;
     }
 
-    @keyframes bubble-rise {
-        from {
-            transform: translateY(100%) rotate(0deg);
-        }
-
-        to {
-            transform: translateY(-100%) rotate(360deg);
-        }
-    }
-
-    @keyframes tilt {
+    @keyframes pixel-float {
 
         0%,
         100% {
-            transform: rotate(-5deg);
+            transform: translate(0, 0) rotate(0deg);
         }
 
         50% {
-            transform: rotate(5deg);
+            transform: translate(-5px, -10px) rotate(5deg);
         }
+    }
+
+    .pixel-float {
+        animation: pixel-float 3s ease-in-out infinite;
+        font-size: 1.5rem;
     }
 </style>
