@@ -41,7 +41,8 @@
                             <?php if (!empty($beer['image'])): ?>
                                 <img src="<?= $beer['image'] ?>"
                                     alt="<?= htmlspecialchars($beer['name']) ?>"
-                                    class="w-full h-full object-cover minecraft-pixelate">
+                                    class="w-full h-full object-cover minecraft-pixelate"
+                                    loading="lazy">
                             <?php else: ?>
                                 <div class="w-full h-full bg-[#8B4513] minecraft-pattern flex items-center justify-center">
                                     <div class="minecraft-item-frame">

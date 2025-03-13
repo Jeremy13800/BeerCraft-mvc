@@ -6,27 +6,44 @@
 ![Apache](https://img.shields.io/badge/Apache-2.4-orange?style=flat-square&logo=apache)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker)
 
-## 🚀 Introduction
+## Introduction
+
 **BeerCraft** is a web application based on **PHP (MVC)** that manages a beer database, including users and comments. The project is designed with **Docker, MySQL, PHP, and Apache**, and features an administration interface.
 
-## 📂 Features
-- Beer management (CRUD)
+## Features
+
+- Beer management (CRUD operations)
 - User authentication system (login/registration)
-- Admin interface
+- Administrator dashboard
 - Comment management
 
-## 🛠️ Installation
+## Learning Objectives
+
+This project helps acquire and strengthen several essential web development skills:
+
+- **Understanding and implementing the MVC architecture**: Separation of responsibilities between Model, View, and Controller.
+- **Manipulating relational databases** using MySQL and PDO for secure queries.
+- **Deployment and containerization** with Docker to ensure a consistent development environment.
+- **Managing authentication and user sessions** to secure the application.
+- **Practicing debugging and testing** to improve code reliability.
+- **Applying best development practices** (PSR-4, separation of concerns, naming conventions, etc.).
+
+## Installation
+
 ### 1️⃣ Prerequisites
+
 - [Docker & Docker Compose](https://www.docker.com/)
 - [Git](https://git-scm.com/)
 
 ### 2️⃣ Clone the project
+
 ```bash
 git clone https://github.com/Jeremy13800/BeerCraft-mvc.git
 cd BeerCraft-mvc
 ```
 
 ### 3️⃣ Run with Docker
+
 ```bash
 docker-compose up -d
 ```
@@ -34,17 +51,20 @@ docker-compose up -d
 The application will be available at **http://localhost**, and **phpMyAdmin at http://localhost:8081**
 
 ### 4️⃣ Import the database
+
 Import the **`beercraft.sql`** file into MySQL using phpMyAdmin or via command line:
+
 ```bash
 docker exec -i mysql-db mysql -u root -proot test < beercraft.sql
 ```
 
-## ⚙️ Complete Project Structure
+## Complete Project Structure
+
 ```
 BeerCraft-mvc/
 ├── .db/               # Database
 │   ├── beercraft.sql  # Database dump
-├── .documention/      # Documentation folder
+├── .documentation/    # Documentation folder
 ├── app/               # Contains all business logic of the project
 │   ├── controllers/   # Controllers (BeerController.php, CommentController.php, UserController.php)
 │   ├── models/        # Models (Beer.php, Category.php, Comment.php, Database.php, User.php)
@@ -68,31 +88,33 @@ BeerCraft-mvc/
 └── docker-compose.yml # Docker configuration
 ```
 
-## 🎨 Interface & User Experience
+## User Interface & Experience
+
 - Clean and intuitive design for smooth navigation.
-- Admin dashboard to easily manage beers and comments.
+- Admin dashboard for easy beer and comment management.
 - Secure forms for adding and editing beers.
 
-## 🐞 Debugging & Development
+## Debugging & Development
+
 - **Xdebug** is enabled in Docker for debugging.
-- Log files accessible in `/logs/`
-- Unit and integration tests available in `/tests/`
+- Log files are accessible in `/logs/`.
+- Unit and integration tests are available in `/tests/`.
 
-## ✨ Conventions & Best Practices
-- **MVC architecture** compliance
-- Routes defined via **Apache & PHP files**
-- **PDO-secured queries**
-- **PSR-4 conventions** for autoloading
-- **Docker usage** for containerization and easy setup
+## Best Practices & Conventions
 
-## 👥 Contribute
+- Compliance with **MVC architecture**.
+- Routes defined via **Apache & PHP files**.
+- Secure queries using **PDO**.
+- **PSR-4 conventions** for autoloading.
+- **Docker-based environment** for easier setup.
+
+## Contribute
+
 1. Fork the project 🍴
 2. Create a branch `feature/my_feature`
 3. Make a **commit** and a **push**
 4. Open a **Pull Request** ✅
 
-## 📜 License
-This project is under the **MIT license**. You are free to use and modify it as you like!
-
 ---
-**🚀 BeerCraft MVC - Developed by [Jérémy](https://github.com/Jeremy13800) 🍻**
+
+** BeerCraft MVC - Developed by [Jérémy](https://github.com/Jeremy13800) 🍻**

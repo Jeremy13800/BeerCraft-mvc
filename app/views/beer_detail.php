@@ -34,7 +34,8 @@
                             <div class="aspect-square">
                                 <img src="<?= $beer['image'] ?>"
                                     alt="<?= htmlspecialchars($beer['name']) ?>"
-                                    class="w-full h-full object-cover transition-transform hover:scale-110 duration-700">
+                                    class="w-full h-full object-cover transition-transform hover:scale-110 duration-700"
+                                    loading="lazy">
                             </div>
                         <?php else: ?>
                             <div class="aspect-square bg-gradient-to-br from-amber-300 to-amber-500 flex items-center justify-center">
@@ -269,27 +270,7 @@
         background-color: #2b1508;
     }
 
-    /* .foam-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 100%;
-        background:
-            radial-gradient(circle at 50% 0%, rgba(255, 250, 240, 0.5) 0%, transparent 75%),
-            repeating-linear-gradient(45deg,
-                rgba(255, 250, 240, 0.12) 0%,
-                rgba(255, 250, 240, 0.12) 2%,
-                transparent 2%,
-                transparent 4%);
-    }
 
-    .bubbles-layer {
-        position: absolute;
-        inset: 0;
-        background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-        animation: bubble-rise 20s linear infinite;
-    } */
 
     .beer-mug {
         width: 200px;

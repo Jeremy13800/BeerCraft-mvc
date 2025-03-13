@@ -20,5 +20,6 @@ define('DB_PASS', 'root');
 // define('DB_PASS', 'cutkiller7');
 
 // Définir un chemin de base pour les URLs et les fichiers
-define('BASE_URL', '/beercraft/');
+define('BASE_URL', 'http://localhost/beercraft/');
+
 define('UPLOADS_DIR', 'uploads/');

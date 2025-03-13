@@ -94,7 +94,8 @@
                             <p class="text-sm text-amber-700 mb-2">Image actuelle :</p>
                             <img src="<?= htmlspecialchars($beer['image']) ?>"
                                 alt="Image actuelle"
-                                class="w-40 h-40 object-cover rounded-lg border-2 border-amber-200">
+                                class="w-40 h-40 object-cover rounded-lg border-2 border-amber-200"
+                                loading="lazy">
                         </div>
                     <?php endif; ?>
 
