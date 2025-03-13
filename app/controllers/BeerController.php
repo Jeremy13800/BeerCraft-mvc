@@ -125,14 +125,25 @@ class BeerController
             exit;
         }
 
+        $errors = [];
         $beerModel = new Beer();
         $beer = $beerModel->getBeerById($id);
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $formData = $this->sanitizeInput($_POST);
-            // Accès à une propriété ou méthode de l'objet actuel
-            $errors = $this->validateBeerData($formData);
-            // Accès à une propriété ou méthode de l'objet actuel
+
+            // Gestion de l'upload d'image
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadResult = $this->handleImageUpload($_FILES['image']);
+                if ($uploadResult['success']) {
+                    $formData['image'] = $uploadResult['path'];
+                } else {
+                    $errors[] = $uploadResult['error'];
+                }
+            } else {
+                // Conserver l'image existante si aucune nouvelle image n'est uploadée
+                $formData['image'] = $beer['image'];
+            }
 
             if (empty($errors)) {
                 if ($beerModel->updateBeer($id, $formData)) {
@@ -144,6 +155,7 @@ class BeerController
             }
         }
 
+        $viewData = compact('beer', 'errors');
         $view = "edit_beer";
         include_once("app/views/layout.php");
     }
@@ -179,7 +191,8 @@ class BeerController
             'origin' => trim(htmlspecialchars($data['origin'] ?? '')),
             'alcohol' => filter_var($data['alcohol'] ?? 0, FILTER_VALIDATE_FLOAT),
             'description' => trim(htmlspecialchars($data['description'] ?? '')),
-            'image' => filter_var($data['image'] ?? '', FILTER_SANITIZE_URL)
+            // Ne pas sanitizer l'image ici car elle sera gérée séparément
+            'image' => $data['image'] ?? null
         ];
     }
 
@@ -200,9 +213,6 @@ class BeerController
         }
         if (strlen($data['description']) < 10) {
             $errors[] = "La description doit contenir au moins 10 caractères.";
-        }
-        if (empty($data['image'])) {
-            $errors[] = "L'URL de l'image n'est pas valide. {$data['image']}";
         }
 
         return $errors;

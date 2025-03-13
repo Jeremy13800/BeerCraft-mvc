@@ -4,6 +4,8 @@ require_once "app/models/User.php";
 class UserController
 //Cette classe gère les actions liées aux utilisateurs
 {
+
+    // DEFINITION DE LA FONCTION POUR L'INSCRIPTION
     public function register()
     {
         $errors = [];

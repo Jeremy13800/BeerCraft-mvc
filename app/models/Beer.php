@@ -11,6 +11,8 @@ class Beer
     }
 
     public function getAll()
+
+
     {
         try {
             $stmt = $this->db->prepare("SELECT * FROM beer ORDER BY created_at DESC");
@@ -71,19 +73,41 @@ class Beer
                         name = :name, 
                         origin = :origin, 
                         alcohol = :alcohol, 
-                        description = :description, 
-                        image = :image 
-                      WHERE id = :id";
+                        description = :description";
+
+            // Ajoute l'image à la requête uniquement si elle existe
+            if (!empty($data['image'])) {
+                $query .= ", image = :image";
+            }
+
+            $query .= " WHERE id = :id";
 
             $stmt = $this->db->prepare($query);
-            return $stmt->execute([
+
+            $params = [
                 ':id' => $id,
                 ':name' => $data['name'],
                 ':origin' => $data['origin'],
                 ':alcohol' => floatval($data['alcohol']),
-                ':description' => $data['description'],
-                ':image' => !empty($data['image']) ? $data['image'] : null
-            ]);
+                ':description' => $data['description']
+            ];
+
+            // Ajoute l'image aux paramètres uniquement si elle existe
+            if (!empty($data['image'])) {
+                $params[':image'] = $data['image'];
+            }
+
+            $result = $stmt->execute($params);
+
+            if ($result) {
+                // Log successful update
+                error_log("Bière mise à jour avec succès. ID: $id");
+                return true;
+            } else {
+                // Log update failure
+                error_log("Échec de la mise à jour de la bière. ID: $id");
+                return false;
+            }
         } catch (PDOException $e) {
             error_log("Erreur dans updateBeer: " . $e->getMessage());
             return false;
